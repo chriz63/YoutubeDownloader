@@ -13,8 +13,7 @@
         MinHeight="450"
         MinWidth="800"
         MaxHeight="450"
-        MaxWidth="800"
-        >
+        MaxWidth="800">
     <Grid>
         <TabControl>
             <!--Downloads Tab-->

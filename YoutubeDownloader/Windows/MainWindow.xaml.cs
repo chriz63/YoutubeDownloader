@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -21,9 +22,11 @@ namespace YoutubeDownloader
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        IConfiguration Configuration;
+        public MainWindow(IConfiguration configuration)
         {
             InitializeComponent();
+            Configuration = configuration;
         }
 
         /// <summary>
