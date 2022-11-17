@@ -5,10 +5,19 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="AssemblyInfo.cs" />
   </ItemGroup>
 
   <ItemGroup>
