@@ -24,14 +24,19 @@
                         Margin="10"
                         MinHeight="280"
                         MaxHeight="280"
+                        ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                         ScrollViewer.VerticalScrollBarVisibility="Visible"
                         ScrollViewer.CanContentScroll="False">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn 
-                                    Header="Title"/>
+                                    Header="Title" 
+                                    Width="670"
+                                    DisplayMemberBinding="{Binding Title}"/>
                                 <GridViewColumn 
-                                    Header="Duration"/>
+                                    Header="Duration" 
+                                    Width="70"
+                                    DisplayMemberBinding="{Binding Duration}"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -47,17 +52,17 @@
                             x:Name="ButtonAdd"
                             Content="Add to list"
                             Padding="5,0,5,0"
-                            Margin="5,0,5,0"/>
+                            Margin="5,0,5,0" Click="ButtonAdd_Click"/>
                         <Button
                             x:Name="ButtonRemoveSelected"
                             Content="Remove selected"
                             Padding="5,0,5,0"
-                            Margin="5,0,5,0"/>
+                            Margin="5,0,5,0" Click="ButtonRemoveSelected_Click"/>
                         <Button 
                             x:Name="ButtonRemoveAll"
                             Content="Remove all"
                             Padding="5,0,5,0"
-                            Margin="5,0,5,0"/>
+                            Margin="5,0,5,0" Click="ButtonRemoveAll_Click"/>
                     </WrapPanel>
                     <Separator Margin="0,10,0,10"/>
                     <StackPanel Orientation="Horizontal">
@@ -69,23 +74,25 @@
                                 Margin="10,0,0,0"/>
                             <TextBlock 
                                 x:Name="TextProgressBar"
-                                HorizontalAlignment="Center"/>
+                                HorizontalAlignment="Center"
+                                Margin="10,11,0,0"/>
                         </Grid>
                         <CheckBox 
                             x:Name="CheckBoxAudio"
                             Content="Audio"
-                            Margin="10,10,5,0"/>
+                            Margin="10,10,5,0" Checked="CheckBoxAudio_Checked"/>
                         <CheckBox 
                             x:Name="CheckBoxVideo"
                             Content="Video"
-                            Margin="5,10,10,0"/>
+                            Margin="5,10,10,0" Checked="CheckBoxVideo_Checked"/>
                         <Button 
                             x:Name="ButtonStart"
                             Content="Start download"
                             Padding="10,0,10,0"
                             Height="40"
-                            Width="230"/>
+                            Width="230" Click="ButtonStart_Click"/>
                     </StackPanel>
+                    <Separator />
                 </StackPanel>
             </TabItem>
             
@@ -104,18 +111,17 @@
                             VerticalAlignment="Top" 
                             Height="30"
                             Grid.Row="1"/>
-                        <Label 
-                            Content="This file location will be stored for later usage, but you can change it if you want every time." 
-                            HorizontalAlignment="Center" 
-                            VerticalAlignment="Top" 
-                            Height="30"
-                            Grid.Row="2"/>
-                        <WrapPanel Margin="130,35,10,0" Grid.Row="3">
-                            <TextBlock Text="File location: "/>
-                            <TextBox x:Name="TextBoxLocation"  Width="400"/>
-                            <Button x:Name="ButtonLocation" 
+                        <WrapPanel Margin="130,0,10,0" Grid.Row="2">
+                            <TextBlock 
+                                Text="File location: "/>
+                            <TextBox 
+                                x:Name="TextBoxLocation"  
+                                Width="400"/>
+                            <Button 
+                                x:Name="ButtonLocation" 
                                 Content="File location" 
-                                Margin="5,0,0,0"/>
+                                Margin="5,0,0,0" 
+                                Click="ButtonLocation_Click"/>
                         </WrapPanel>
                     </Grid>
                     <Separator Margin="0,10,0,10"/>
