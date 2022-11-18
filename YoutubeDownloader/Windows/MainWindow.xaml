@@ -71,7 +71,8 @@
                                 x:Name="ProgressBar"
                                 Height="20"
                                 Width="400"
-                                Margin="10,0,0,0"/>
+                                Margin="10,0,0,0"
+                                Maximum="1"/>
                             <TextBlock 
                                 x:Name="TextProgressBar"
                                 HorizontalAlignment="Center"

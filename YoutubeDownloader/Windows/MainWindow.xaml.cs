@@ -1,10 +1,11 @@
-﻿using AngleSharp.Text;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -131,47 +132,59 @@ namespace YoutubeDownloader
         /// <param name="e"></param>
         private async void ButtonStart_Click(object sender, RoutedEventArgs e)
         {
-            YoutubeClient yt = new YoutubeClient();
+            try 
+            {
+                YoutubeClient yt = new YoutubeClient();
 
-            if (CheckBoxAudio.IsChecked == false && CheckBoxVideo.IsChecked == false)
-            {
-                System.Windows.MessageBox.Show("Please select a file format!", "Error");
-            }
-            else if (TextBoxLocation.Text.Equals(""))
-            {
-                System.Windows.MessageBox.Show("Please select a file location in Settings!", "Error");
-            }
-            else if (videoList.Count == 0) 
-            {
-                System.Windows.MessageBox.Show("Please add videos to the list!", "Error");
-            }
-
-            if (CheckBoxAudio.IsChecked == true)
-            {
-                var counter = 0;
-                foreach (var item in videoList)
+                if (CheckBoxAudio.IsChecked == false && CheckBoxVideo.IsChecked == false)
                 {
-                    counter++;
-                    var streamManifest = await yt.Videos.Streams.GetManifestAsync(item.Url);
-                    var streamInfo = streamManifest.GetAudioOnlyStreams().GetWithHighestBitrate();
-                    var progress = new Progress<double>(p => ProgressBar.Value = $"{p}".ToDouble());
-                    TextProgressBar.Text = $"Downloadig {counter} of {videoList.Count}";
-                    await yt.Videos.Streams.DownloadAsync(streamInfo, $"{TextBoxLocation.Text}\\{item.Title}.mp3", progress);
-                    ProgressBar.Value = 0;
+                    System.Windows.MessageBox.Show("Please select a file format!", "Error");
+                }
+                else if (videoList.Count == 0)
+                {
+                    System.Windows.MessageBox.Show("Please add videos to the list!", "Error");
+                }
+
+                if (Directory.Exists(TextBoxLocation.Text))
+                {
+                    if (CheckBoxAudio.IsChecked == true)
+                    {
+                        var counter = 0;
+                        foreach (var item in videoList)
+                        {
+                            string videoTitle = item.Title.Replace("/", "");
+                            counter++;
+                            var streamManifest = await yt.Videos.Streams.GetManifestAsync(item.Url);
+                            var streamInfo = streamManifest.GetAudioOnlyStreams().GetWithHighestBitrate();
+                            var progress = new Progress<double>(p => ProgressBar.Value = p);
+                            TextProgressBar.Text = $"Downloadig {counter} of {videoList.Count}";
+                            await yt.Videos.Streams.DownloadAsync(streamInfo, $"{TextBoxLocation.Text}\\{videoTitle}.mp3", progress);
+                        }
+                        TextProgressBar.Text = $"{counter} of {videoList.Count} successfully downloaded";
+                    }
+                    else if (CheckBoxVideo.IsChecked == true)
+                    {
+                        var counter = 0;
+                        foreach (var item in videoList)
+                        {
+                            counter++;
+                            var fileName = $"{TextBoxLocation.Text}\\{item.Title}.mp4";
+                            var progress = new Progress<double>(p => ProgressBar.Value = p);
+                            TextProgressBar.Text = $"Downloadig {counter} of {videoList.Count}";
+                            await yt.Videos.DownloadAsync(item.Url, $"{TextBoxLocation.Text}\\{item.Title}.mp4", o => o.SetPreset(ConversionPreset.UltraFast), progress);
+                        }
+                        TextProgressBar.Text = $"{counter} of {videoList.Count} successfully downloaded";
+                    }
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show("Directory not exists, please check file location", "Error");
                 }
             }
-            else if (CheckBoxVideo.IsChecked == true)
+            catch (Exception ex)
             {
-                var counter = 0;
-                foreach (var item in videoList)
-                {
-                    counter++;
-                    var fileName = $"{TextBoxLocation.Text}\\{item.Title}.mp4";
-                    var progress = new Progress<double>(p => ProgressBar.Value = $"{p}".ToDouble());
-                    TextProgressBar.Text = $"Downloadig {counter} of {videoList.Count}";
-                    await yt.Videos.DownloadAsync(item.Url, $"{TextBoxLocation.Text}\\{item.Title}.mp4", o => o.SetPreset(ConversionPreset.UltraFast), progress);
-                    ProgressBar.Value = 0;
-                }
+                
+                System.Windows.MessageBox.Show(ex.Message, "Error");
             }
         }
 
