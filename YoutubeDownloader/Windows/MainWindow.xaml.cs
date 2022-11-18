@@ -1,28 +1,20 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
+using System.IO;
+using System.Windows;
+using System.Diagnostics;
+using System.Windows.Forms;
+using System.Windows.Controls;
+using System.Windows.Navigation;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using YoutubeDownloader.Helper;
-using YoutubeDownloader.Models;
+using Microsoft.Extensions.Configuration;
+
 using YoutubeExplode;
 using YoutubeExplode.Converter;
 using YoutubeExplode.Videos.Streams;
+
+using YoutubeDownloader.Helper;
+using YoutubeDownloader.Models;
 
 namespace YoutubeDownloader
 {
