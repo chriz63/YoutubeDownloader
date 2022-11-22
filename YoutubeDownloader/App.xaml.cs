@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using YoutubeDownloader.Helper;
 
 namespace YoutubeDownloader
 {
@@ -22,6 +23,7 @@ namespace YoutubeDownloader
 
         private void ConfigureServices(ServiceCollection services)
         {
+            services.AddSingleton<IConfigurationChanger, ConfigurationChanger>();
             services.AddSingleton<MainWindow>();
         }
 
