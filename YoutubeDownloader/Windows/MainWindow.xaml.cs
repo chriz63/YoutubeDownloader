@@ -16,6 +16,15 @@ using YoutubeExplode.Videos.Streams;
 using YoutubeDownloader.Helper;
 using YoutubeDownloader.Models;
 
+
+/*
+ * TODO
+ * 
+ * + remove appsettings.json switch to app.config to store store changes 
+ * + implement ffmpeg installer that installs ffmpeg to given directory and installs in windows environment vars
+ * 
+ */
+
 namespace YoutubeDownloader
 {
     /// <summary>
@@ -23,18 +32,15 @@ namespace YoutubeDownloader
     /// </summary>
     public partial class MainWindow : Window
     {
-        IConfiguration Configuration;
-
         private readonly ObservableCollection<VideoModel> videoList = new ObservableCollection<VideoModel>();
 
         private readonly DataRetriever retriever = new DataRetriever();
 
         public Progress<Double> progress;
 
-        public MainWindow(IConfiguration configuration)
+        public MainWindow()
         {
             InitializeComponent();
-            Configuration = configuration;
             ListVideos.ItemsSource = videoList;
         }
 

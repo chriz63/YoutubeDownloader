@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Configuration;
 using System.Windows;
-using Microsoft.Extensions.Configuration;
+using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace YoutubeDownloader
@@ -12,10 +13,6 @@ namespace YoutubeDownloader
     {
         private ServiceProvider serviceProvider;
 
-        public IConfiguration Configuration = new ConfigurationBuilder()
-            .AddJsonFile("./appsettings.json", optional: true, reloadOnChange: true)
-            .Build();
-
         public App()
         {
             var services = new ServiceCollection();
@@ -25,7 +22,6 @@ namespace YoutubeDownloader
 
         private void ConfigureServices(ServiceCollection services)
         {
-            services.AddSingleton(Configuration);
             services.AddSingleton<MainWindow>();
         }
 
