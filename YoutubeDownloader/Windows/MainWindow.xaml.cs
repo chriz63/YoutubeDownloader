@@ -2,12 +2,12 @@
 using System.IO;
 using System.Windows;
 using System.Diagnostics;
+using System.Configuration;
 using System.Windows.Forms;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Microsoft.Extensions.Configuration;
 
 using YoutubeExplode;
 using YoutubeExplode.Converter;
@@ -15,6 +15,7 @@ using YoutubeExplode.Videos.Streams;
 
 using YoutubeDownloader.Helper;
 using YoutubeDownloader.Models;
+
 
 
 /*
@@ -36,12 +37,16 @@ namespace YoutubeDownloader
 
         private readonly DataRetriever retriever = new DataRetriever();
 
+        private readonly IConfigurationChanger _configurationChanger;
+
         public Progress<Double> progress;
 
-        public MainWindow()
+        public MainWindow(IConfigurationChanger configurationChanger)
         {
             InitializeComponent();
             ListVideos.ItemsSource = videoList;
+
+            _configurationChanger= configurationChanger;
         }
 
         /// <summary>
