@@ -35,17 +35,17 @@ namespace YoutubeDownloader
     {
         private readonly ObservableCollection<VideoModel> videoList = new ObservableCollection<VideoModel>();
 
-        private readonly DataRetriever retriever = new DataRetriever();
-
+        private readonly IDataRetriever _dataRetriever;
         private readonly IConfigurationChanger _configurationChanger;
 
         public Progress<Double> progress;
 
-        public MainWindow(IConfigurationChanger configurationChanger)
+        public MainWindow(IConfigurationChanger configurationChanger, IDataRetriever dataRetriever)
         {
             InitializeComponent();
             ListVideos.ItemsSource = videoList;
 
+            _dataRetriever = dataRetriever;
             _configurationChanger= configurationChanger;
         }
 
@@ -60,7 +60,7 @@ namespace YoutubeDownloader
             try
             {
                 var url = TextBoxUrl.Text;
-                VideoModel video = await retriever.ToVideoModel(url);
+                VideoModel video = await _dataRetriever.ToVideoModel(url);
 
                 videoList.Add(video);
                 TextBoxUrl.Clear();

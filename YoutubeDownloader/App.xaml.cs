@@ -23,6 +23,7 @@ namespace YoutubeDownloader
 
         private void ConfigureServices(ServiceCollection services)
         {
+            services.AddSingleton<IDataRetriever, DataRetriever>();
             services.AddSingleton<IConfigurationChanger, ConfigurationChanger>();
             services.AddSingleton<MainWindow>();
         }
