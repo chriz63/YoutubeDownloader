@@ -4,14 +4,11 @@ using System.Windows;
 using System.Diagnostics;
 using System.Configuration;
 using System.Windows.Forms;
-using System.Windows.Controls;
 using System.Windows.Navigation;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using YoutubeExplode;
-using YoutubeExplode.Converter;
-using YoutubeExplode.Videos.Streams;
 
 using YoutubeDownloader.Helper;
 using YoutubeDownloader.Models;
@@ -21,7 +18,6 @@ using YoutubeDownloader.Models;
 /*
  * TODO
  * 
- * + remove appsettings.json switch to app.config to store store changes 
  * + implement ffmpeg installer that installs ffmpeg to given directory and installs in windows environment vars
  * 
  */
@@ -44,6 +40,8 @@ namespace YoutubeDownloader
         {
             InitializeComponent();
             ListVideos.ItemsSource = videoList;
+            TextBoxLocation.Text = ConfigurationManager.AppSettings["DownloadDestination"];
+            TextBoxFfmpegLocation.Text = ConfigurationManager.AppSettings["FFmpegDestination"];
 
             _dataRetriever = dataRetriever;
             _configurationChanger= configurationChanger;
@@ -133,11 +131,14 @@ namespace YoutubeDownloader
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void ButtonStart_Click(object sender, RoutedEventArgs e)
+        private void ButtonStart_Click(object sender, RoutedEventArgs e)
         {
-            try 
+            try
             {
                 YoutubeClient yt = new YoutubeClient();
+
+                Helper.YoutubeDownloader youtubeDownloader = new Helper.YoutubeDownloader
+                    (videoList, ProgressBar, TextProgressBar, TextBoxLocation, CheckBoxAudio, CheckBoxVideo);
 
                 if (CheckBoxAudio.IsChecked == false && CheckBoxVideo.IsChecked == false)
                 {
@@ -148,35 +149,16 @@ namespace YoutubeDownloader
                     System.Windows.MessageBox.Show("Please add videos to the list!", "Error");
                 }
 
+
                 if (Directory.Exists(TextBoxLocation.Text))
                 {
                     if (CheckBoxAudio.IsChecked == true)
                     {
-                        var counter = 0;
-                        foreach (var item in videoList)
-                        {
-                            string videoTitle = item.Title.Replace("/", "");
-                            counter++;
-                            var streamManifest = await yt.Videos.Streams.GetManifestAsync(item.Url);
-                            var streamInfo = streamManifest.GetAudioOnlyStreams().GetWithHighestBitrate();
-                            var progress = new Progress<double>(p => ProgressBar.Value = p);
-                            TextProgressBar.Text = $"Downloadig {counter} of {videoList.Count}";
-                            await yt.Videos.Streams.DownloadAsync(streamInfo, $"{TextBoxLocation.Text}\\{videoTitle}.mp3", progress);
-                        }
-                        TextProgressBar.Text = $"{counter} of {videoList.Count} successfully downloaded";
+                        youtubeDownloader.DownloadAudio();
                     }
                     else if (CheckBoxVideo.IsChecked == true)
                     {
-                        var counter = 0;
-                        foreach (var item in videoList)
-                        {
-                            counter++;
-                            var fileName = $"{TextBoxLocation.Text}\\{item.Title}.mp4";
-                            var progress = new Progress<double>(p => ProgressBar.Value = p);
-                            TextProgressBar.Text = $"Downloadig {counter} of {videoList.Count}";
-                            await yt.Videos.DownloadAsync(item.Url, $"{TextBoxLocation.Text}\\{item.Title}.mp4", o => o.SetPreset(ConversionPreset.UltraFast), progress);
-                        }
-                        TextProgressBar.Text = $"{counter} of {videoList.Count} successfully downloaded";
+                        youtubeDownloader.DownloadVideo();
                     }
                 }
                 else
@@ -184,9 +166,8 @@ namespace YoutubeDownloader
                     System.Windows.MessageBox.Show("Directory not exists, please check file location", "Error");
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex) 
             {
-                
                 System.Windows.MessageBox.Show(ex.Message, "Error");
             }
         }
@@ -204,6 +185,44 @@ namespace YoutubeDownloader
             if ( result == System.Windows.Forms.DialogResult.OK ) 
             {
                 TextBoxLocation.Text = dialog.SelectedPath;
+                _configurationChanger.Change("DownloadDestination", dialog.SelectedPath);
+            }
+            Console.WriteLine(ConfigurationManager.AppSettings["DownloadDestination"]);
+        }
+
+        private void ButtonFfmpegLocation_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new FolderBrowserDialog();
+            var result = dialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                TextBoxFfmpegLocation.Text = dialog.SelectedPath;
+                _configurationChanger.Change("FFmpegDestination", dialog.SelectedPath);
+            }
+            Console.WriteLine(ConfigurationManager.AppSettings["FFmpegDestination"]);
+        }
+
+        private async void ButtonFfmpegInstall_Click(object sender, RoutedEventArgs e)
+        {
+            var config = ConfigurationManager.AppSettings;
+            var ffmpegUrl = config["FFmpegURL"];
+            var ffmpegDestination = config["FFmpegDestination"] + "\\ffmpeg.zip";
+            try 
+            {
+                if ( ffmpegUrl != null && ffmpegDestination != null && File.Exists(ffmpegDestination) == false) 
+                {
+                    FileDownloader fileDownloader = new FileDownloader(ProgressBarFfmpeg, TextProgressBarFfmpeg);
+                    await fileDownloader.Start();
+                }
+                if (File.Exists(ffmpegDestination)) 
+                {
+                    FileExtractor fileExtractor = new FileExtractor(ProgressBarFfmpeg, TextProgressBarFfmpeg);
+                    await fileExtractor.Start();
+                }
+            }
+            catch (Exception ex) 
+            {
+                System.Windows.MessageBox.Show(ex.ToString(), "Error");
             }
         }
 
