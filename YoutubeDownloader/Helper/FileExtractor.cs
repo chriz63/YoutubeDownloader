@@ -9,6 +9,9 @@ using System.Windows.Media;
 
 namespace YoutubeDownloader.Helper
 {
+    /// <summary>
+    /// class <c>FileExtractor</c> contains methods to extract a zip file
+    /// </summary>
     public class FileExtractor : IFileExtractor
     {
         ProgressBar ProgressBar;
@@ -30,6 +33,10 @@ namespace YoutubeDownloader.Helper
             extractionDestination = config["FFmpegDestination"] + "\\";
         }
 
+        /// <summary>
+        /// Task <c>Start</c> starts the file extracting and sends the progress to an event handler
+        /// </summary>
+        /// <returns></returns>
         public async Task Start()
         {
             try 
@@ -45,7 +52,10 @@ namespace YoutubeDownloader.Helper
             }
         }
 
-        public async Task RenameDirectory()
+        /// <summary>
+        /// void <c>RenameDirectory</c> ranames the extracted directory
+        /// </summary>
+        public void RenameDirectory()
         {
             try
             {   
@@ -60,27 +70,33 @@ namespace YoutubeDownloader.Helper
             }
         }
 
+        /// <summary>
+        /// void <c>ZipExtractProgressChanged</c> sets the value of the progressbar,
+        /// when extracting is finished, mehtod renames the directory of the extracted zip file
+        /// and adds the full path of directory to windows environment variable user path
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void ZipExtractProgressChanged(object sender, ExtractProgressEventArgs e)
         {
-            long totalBytesToTransfer = 0;
-            long bytesTransferred = 0;
-
             if (e.TotalBytesToTransfer > 0)
             {
-                bytesTransferred += e.BytesTransferred;
-                totalBytesToTransfer += e.TotalBytesToTransfer;
                 ProgressBar.Value = Convert.ToInt32(100 * e.BytesTransferred / e.TotalBytesToTransfer);
             }
             
             if (e.EntriesExtracted > 0)
             {
-                Console.WriteLine($"Ectracted: {e.EntriesExtracted}, Total: {e.EntriesTotal}");
+                TextBlock.Text = ($"Extracted {e.EntriesExtracted} from {e.EntriesTotal} files");
                 if (e.EntriesExtracted == e.EntriesTotal)
                 {
                     await Task.Delay(1000);
-                    await RenameDirectory();
+                    TextBlock.Text = "Renaming ffmpeg directory";
+                    RenameDirectory();
                     await Task.Delay(1000);
-                    //envChanger.Add();
+                    TextBlock.Text = "Adding ffmpeg to path";
+                    envChanger.Add();
+                    await Task.Delay(1000);
+                    TextBlock.Text = "FFmpeg was successfully installed";
                 }
             }
         }

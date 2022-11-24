@@ -190,6 +190,12 @@ namespace YoutubeDownloader
             Console.WriteLine(ConfigurationManager.AppSettings["DownloadDestination"]);
         }
 
+        /// <summary>
+        /// void <c>ButtonFfmpegLocation_Click</c> opens a FolderDialogBrowser to set the path
+        /// where ffmpeg should be installed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonFfmpegLocation_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new FolderBrowserDialog();
@@ -202,6 +208,11 @@ namespace YoutubeDownloader
             Console.WriteLine(ConfigurationManager.AppSettings["FFmpegDestination"]);
         }
 
+        /// <summary>
+        /// void <c>ButtonFfmpegInstall_Click</c> starts downloading and installing ffmpeg
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void ButtonFfmpegInstall_Click(object sender, RoutedEventArgs e)
         {
             var config = ConfigurationManager.AppSettings;

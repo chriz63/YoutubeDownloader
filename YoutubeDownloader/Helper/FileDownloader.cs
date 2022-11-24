@@ -20,6 +20,10 @@ namespace YoutubeDownloader.Helper
             TextBlock = textBlock;
         }
 
+        /// <summary>
+        /// Task <c>Start</c> starts the download of ffmpeg
+        /// </summary>
+        /// <returns></returns>
         public async Task Start()
         {
             var config = ConfigurationManager.AppSettings;
@@ -32,9 +36,17 @@ namespace YoutubeDownloader.Helper
             await wc.DownloadFileTaskAsync(new Uri(ffmpegUrl), ffmpegDestination);
         }
 
+        /// <summary>
+        /// void <c>DownloadProgressChanged</c> sets progress and text to progressbar
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
+            var megabytesReceived = e.BytesReceived / 1048;
+            var totalMegabytesToReceive = e.TotalBytesToReceive / 1048;
             ProgressBar.Value = e.ProgressPercentage;
+            TextBlock.Text = $"Downloaded {megabytesReceived} from {totalMegabytesToReceive} Megabytes";
         }
     }
 }
