@@ -3,8 +3,17 @@ using System.Configuration;
 
 namespace YoutubeDownloader.Helper
 {
+    /// <summary>
+    /// class <c>ConfigurationChanger</c> includes a method to change keys with their given values in the App.config file
+    /// </summary>
     public class ConfigurationChanger : IConfigurationChanger
     {
+        /// <summary>
+        /// bool <c>Change</c> changes a value with their given key
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool Change(string key, string value)
         {
             try 

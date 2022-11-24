@@ -9,6 +9,9 @@ using System.Windows.Controls;
 
 namespace YoutubeDownloader.Helper
 {
+    /// <summary>
+    /// class <c>FileDownloader</c> includes methods to download a zip file
+    /// </summary>
     public class FileDownloader : IFileDownloader
     {
         ProgressBar ProgressBar;

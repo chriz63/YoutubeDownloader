@@ -13,6 +13,9 @@ using YoutubeExplode.Videos.Streams;
 
 namespace YoutubeDownloader.Helper
 {
+    /// <summary>
+    /// class <cYoutubeDownloader</c> contains methods to download videos as audio or video from youtube
+    /// </summary>
     public class YoutubeDownloader : IYoutubeDownloader
     {
 
@@ -36,6 +39,9 @@ namespace YoutubeDownloader.Helper
             VideoList = videoList;
         }
 
+        /// <summary>
+        /// void <c>DownloadAudio</c> downloads a video from youtube and saves it as mp3 file
+        /// </summary>
         public async void DownloadAudio()
         {
             try
@@ -60,6 +66,9 @@ namespace YoutubeDownloader.Helper
             }
         }
 
+        /// <summary>
+        /// void <c>DownloadVideo</c> downloads a video from youtube and saves it as mp4 file
+        /// </summary>
         public async void DownloadVideo()
         {
             try

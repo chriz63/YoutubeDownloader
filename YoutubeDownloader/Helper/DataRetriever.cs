@@ -10,6 +10,9 @@ using YoutubeExplode.Videos;
 
 namespace YoutubeDownloader.Helper
 {
+    /// <summary>
+    /// class <c>DataRetriever</c> retrieves data from a youtube video to a VideoModel
+    /// </summary>
     public class DataRetriever : IDataRetriever
     {
         YoutubeClient yt = new YoutubeClient();
