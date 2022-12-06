@@ -49,7 +49,27 @@ namespace YoutubeDownloader.Helper
                 var counter = 0;
                 foreach (var item in VideoList)
                 {
-                    string videoTitle = item.Title.Replace("/", "");
+                    string videoTitle = item.Title
+                        .Replace("/", "")
+                        .Replace("#", "")
+                        .Replace("&", "")
+                        .Replace("{", "")
+                        .Replace("}", "")
+                        .Replace("\\", "")
+                        .Replace("<", "")
+                        .Replace(">", "")
+                        .Replace("*", "")
+                        .Replace("?", "")
+                        .Replace("!", "")
+                        .Replace("'", "")
+                        .Replace("\"", "")
+                        .Replace(" ", "")
+                        .Replace(":", "")
+                        .Replace("@", "")
+                        .Replace("+", "")
+                        .Replace("`", "")
+                        .Replace("|", "")
+                        .Replace("=", "");
                     counter++;
                     var streamManifest = await yt.Videos.Streams.GetManifestAsync(item.Url);
                     var streamInfo = streamManifest.GetAudioOnlyStreams().GetWithHighestBitrate();
